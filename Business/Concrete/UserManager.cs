@@ -1,5 +1,8 @@
 ﻿using Business.Abstract;
 using Business.Constans;
+using Business.ValidationRules.FluentValidation;
+using Core.Aspects.Autofac.Validation;
+using Core.Entities.Concrete;
 using Core.Utilities.Results;
 using DataAccess.Abstract;
 using Entities.Concrete;
@@ -9,7 +12,7 @@ using System.Text;
 
 namespace Business.Concrete
 {
-    public class UserManager :IUserService
+    public class UserManager : IUserService
     {
         IUserDal _userDal;
 
@@ -32,12 +35,29 @@ namespace Business.Concrete
 
         public IDataResult<List<User>> GetAll()
         {
-            return new SuccessDataResult<List<User>>(_userDal.GetAll(), Messages.UsersListed);
+            return new SuccessDataResult<List<User>>(_userDal.GetAll(), Messages.UserListed);
         }
 
-        public IDataResult<User> GetById(int id)
+        public IDataResult<User> GetByCustomerId(int customerId)
         {
-            return new SuccessDataResult<User>(_userDal.Get(c => c.UserId == id), Messages.GetUserByUserId);
+            return new SuccessDataResult<User>(_userDal.Get(x => x.UserId == customerId), Messages.UserByCustomerId);
+        }
+
+        public IDataResult<User> GetByMail(string email)
+        {
+            return new SuccessDataResult<User>(_userDal.Get(u => u.Email == email));
+        }
+
+        public IDataResult<User> GetByUserId(int userId)
+        {
+
+            return new SuccessDataResult<User>(_userDal.Get(u => u.UserId == userId));
+
+        }
+
+        public IDataResult<List<OperationClaim>> GetClaims(User user)
+        {
+            return new SuccessDataResult<List<OperationClaim>>(_userDal.GetClaims(user));
         }
 
         public IResult Update(User user)
