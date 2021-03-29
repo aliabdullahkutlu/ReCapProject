@@ -84,8 +84,9 @@ namespace Business.Constans
         public static string SuccessfullLogin = "Sisteme giriş başarılı ";
         public static string UserRegistered = "Kullanıcı başarıyla kaydedildi.";
         public static string UserExist = "Kullanıcı mevcut";
-        internal static string UserCantDeleted;
-        internal static string UserListed;
-        internal static string UserByCustomerId;
+        public static string UserCantDeleted = "Kullanıcı silinmedi";
+        public static string UserListed = "Kullanıcılar listelendi";
+        public static string UserByCustomerId = "Kullanıcılar numaralara göre listelendi";
+
     }
 }
