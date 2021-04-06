@@ -42,7 +42,7 @@ namespace WebAPI.Controllers
         }
 
         [HttpPost("add")]
-        public IActionResult PostAdd(Brand brand)
+        public IActionResult Add(Brand brand)
         {
             var result = _brandService.Add(brand);
             if (result.Success)
@@ -52,7 +52,7 @@ namespace WebAPI.Controllers
             return BadRequest(result);
         }
 
-        [HttpDelete]
+        [HttpDelete("delete")]
         public IActionResult Delete(Brand brand)
         {
             var result = _brandService.Delete(brand);

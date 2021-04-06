@@ -36,6 +36,11 @@ namespace DataAccess.Concrete
             _cars.Remove(deleteToCar);
         }
 
+        public List<CarDetailDto> GetCarDetails(Expression<Func<CarDetailDto, bool>> filter = null)
+        {
+            throw new NotImplementedException();
+        }
+
         public Car Get(Expression<Func<Car, bool>> filter)
         {
             throw new NotImplementedException();
@@ -56,10 +61,7 @@ namespace DataAccess.Concrete
             return _cars.Where(c => c.Id == c.Id).ToList();
         }
 
-        public List<CarDetailDto> GetCarDetails()
-        {
-            throw new NotImplementedException();
-        }
+       
 
         public void Update(Car car)
         {

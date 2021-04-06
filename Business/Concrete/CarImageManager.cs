@@ -9,6 +9,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
+
 namespace Business.Concrete
 {
     public class CarImageManager : ICarImageService
@@ -55,7 +56,8 @@ namespace Business.Concrete
                 return new ErrorResult(Messages.ImageCanNotAddMoreFive);
             }
 
-            var imageResult = Fileupload.FileUpload.Upload(image);
+
+            var imageResult = FileUpload.Upload(image);
 
             if (!imageResult.Success)
             {
@@ -65,7 +67,6 @@ namespace Business.Concrete
             _carImageDal.Add(carImage);
             return new SuccessResult(Messages.ImageAdded);
         }
-
         public IResult Delete(CarImage carImage)
         {
             var image = _carImageDal.Get(c => c.ImageId == carImage.ImageId);
@@ -74,7 +75,7 @@ namespace Business.Concrete
                 return new ErrorResult(Messages.ImageCanNotFound);
             }
 
-            Fileupload.FileUpload.Delete(image.ImagePath);
+            FileUpload.Delete(image.ImagePath);
             _carImageDal.Delete(carImage);
             return new SuccessResult(Messages.ImageDeleted);
         }
@@ -87,7 +88,7 @@ namespace Business.Concrete
                 return new ErrorResult(Messages.ImageCanNotFound);
             }
 
-            var updatedFile = Fileupload.FileUpload.Update(image, isImage.ImagePath);
+            var updatedFile = FileUpload.Update(image, isImage.ImagePath);
             if (!updatedFile.Success)
             {
                 return new ErrorResult(updatedFile.Message);
