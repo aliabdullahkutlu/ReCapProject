@@ -32,6 +32,13 @@ namespace DataAccess.Concrete.EntityFramework
                                  Images = (from i in context.CarImages where i.CarId == c.Id select i.ImagePath).ToList(),
                                  //(from carImage in context.CarImages where carImage.CarId == c.Id select carImage.ImagePath).FirstOrDefault(),
                                  Description = c.Description,
+                                 ModelYear = c.ModelYear,
+                                 Fuel = c.Fuel,
+                                 MotorHacmi = c.MotorHacmi,
+                                 MotorGucu = c.MotorGucu,
+                                 ÇekişTürü = c.ÇekişTürü,
+                                 Vites = c.Vites,
+                                 
                                  //Status = !context.Rentals.Any(r => r.CarId == c.CarId && (r.ReturnDate == null  r.ReturnDate > DateTime.Now))
                                  //IsRentable = !context.Rentals.Any(r=>r.CarId == c.Id)  !context.Rentals.Any(r => r.CarId == c.Id && (r.ReturnDate == null || (r.ReturnDate.HasValue && r.ReturnDate > DateTime.Now )))
                              };

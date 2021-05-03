@@ -7,7 +7,6 @@ using System.Text;
 
 namespace Core.Utilities.FileUploads
 {
-
     public class FileUpload
     {
         private static string _currentDirectory = Environment.CurrentDirectory + "\\wwwroot";

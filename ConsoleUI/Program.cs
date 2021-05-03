@@ -58,7 +58,7 @@ namespace ConsoleUI
 
         private static void BrandAndCarAdded()
         {
-            CarManager carManager = new CarManager(new EfCarDal(), new BrandManager(new EfBrandDal()));
+            CarManager carManager = new CarManager(new EfCarDal());
             BrandManager brandManager = new BrandManager(new EfBrandDal());
             brandManager.Add(new Brand { BrandId = 9, BrandName = "Toyota" });
             carManager.Add(new Car
@@ -67,7 +67,7 @@ namespace ConsoleUI
 
         private static void CarDetailsDTO()
         {
-            CarManager carManager = new CarManager(new EfCarDal(), new BrandManager(new EfBrandDal()));
+            CarManager carManager = new CarManager(new EfCarDal());
             var result = carManager.GetCarDetailDto();
 
             Console.WriteLine("---------KİRALIK ARABA LİSTESİ---------\n ");

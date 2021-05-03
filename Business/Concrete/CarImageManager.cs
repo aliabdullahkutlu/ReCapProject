@@ -36,7 +36,7 @@ namespace Business.Concrete
             }
 
             List<CarImage> images = new List<CarImage>();
-            images.Add(new CarImage() { CarId = 0, ImageId = 0, ImagePath = "/images/araba.jpeg" });
+            images.Add(new CarImage() { CarId = 0, ImageId = 0, ImagePath = "images/Araba1.jpg" });
 
             return new SuccessDataResult<List<CarImage>>(images);
         }
@@ -56,7 +56,6 @@ namespace Business.Concrete
                 return new ErrorResult(Messages.ImageCanNotAddMoreFive);
             }
 
-
             var imageResult = FileUpload.Upload(image);
 
             if (!imageResult.Success)
@@ -67,6 +66,7 @@ namespace Business.Concrete
             _carImageDal.Add(carImage);
             return new SuccessResult(Messages.ImageAdded);
         }
+
         public IResult Delete(CarImage carImage)
         {
             var image = _carImageDal.Get(c => c.ImageId == carImage.ImageId);
@@ -98,5 +98,6 @@ namespace Business.Concrete
             return new SuccessResult(Messages.ImageUpdated);
 
         }
+
     }
 }

@@ -18,60 +18,59 @@ namespace Business.Concrete
     public class CarManager : ICarService
     {
         ICarDal _carDal;
-        IBrandService _brandService;
 
-        public CarManager(ICarDal carDal, IBrandService brandService)
+        public CarManager(ICarDal carDal)
         {
             _carDal = carDal;
-            _brandService = brandService;
         }
 
-        [CacheRemoveAspect("ICarService.Get")]
         [SecuredOperation("car.add,admin")]
         [ValidationAspect(typeof(CarValidator))]
         public IResult Add(Car car)
         {
-            IResult result = BusinessRules.Run(CheckIfCarCountOfBrandCorrect(car.BrandId), CheckIfCategoryLimitExceded());
-
-            if (result != null)
-            {
-                return result;
-            }
+            //business codes
 
             _carDal.Add(car);
-
             return new SuccessResult(Messages.CarAdded);
-
         }
 
-        //[TransactionScopeAspect]
-        public IResult AddTransactionalTest(Car car)
+        [SecuredOperation("car.add,admin")]
+        public IResult Update(Car car)
         {
-            Add(car);
-            if (car.DailyPrice < 200)
+            if (car.DailyPrice > 0 && car.Description.Length > 1)
             {
-                throw new Exception("");
+                _carDal.Update(car);
+                return new SuccessResult(Messages.CarUpdated);
             }
-
-            Add(car);
-
-            return null;
+            else
+            {
+                return new ErrorResult(Messages.CarCanNotUpdated);
+            }
         }
 
         public IResult Delete(Car car)
         {
-            _carDal.Delete(car);
-            return new SuccessResult(Messages.CarDeleted);
+            try
+            {
+                _carDal.Delete(car);
+                return new SuccessResult(Messages.CarDeleted);
+            }
+            catch (Exception e)
+            {
+                return new ErrorResult(Messages.CarCanNotDelete);
+            }
+
         }
 
-        [CacheAspect]
         public IDataResult<List<Car>> GetAll()
         {
+            if (DateTime.Now.Hour == null)
+            {
+                return new ErrorDataResult<List<Car>>(Messages.Maintenance);
+            }
             return new SuccessDataResult<List<Car>>(_carDal.GetAll(), Messages.CarsListed);
         }
 
-        [CacheAspect]
-        //[PerformanceAspect(5)]
         public IDataResult<Car> GetById(int carId)
         {
             return new SuccessDataResult<Car>(_carDal.Get(c => c.Id == carId));
@@ -82,54 +81,23 @@ namespace Business.Concrete
             return new SuccessDataResult<List<CarDetailDto>>(_carDal.GetCarDetails(), Messages.CarListedWDto);
         }
 
-        public IDataResult<List<Car>> GetCarsByBrandId(int id)
+        public IDataResult<List<Car>> GetCarsByBrandId(int brandId)
         {
-            return new SuccessDataResult<List<Car>>(_carDal.GetAll(c => c.BrandId == id), Messages.CarListedWBrandId);
+            return new SuccessDataResult<List<Car>>(_carDal.GetAll(c => c.BrandId == brandId), Messages.CarListedWBrandId);
         }
 
-        public IDataResult<List<Car>> GetCarsByColorId(int id)
+        public IDataResult<List<Car>> GetCarsByColorId(int colorId)
         {
-            return new SuccessDataResult<List<Car>>(_carDal.GetAll(c => c.ColorId == id), Messages.CarListedWColorId);
+            return new SuccessDataResult<List<Car>>(_carDal.GetAll(c => c.ColorId == colorId), Messages.CarListedWColorId);
         }
 
-        
-        [CacheRemoveAspect("ICarService.Get")] //ıcarservicedeki bütün getleri sil
-        [ValidationAspect(typeof(CarValidator))]
-        public IResult Update(Car car)
+
+        public IDataResult<List<CarDetailDto>> GetCarDetailDtoById(int carId)
         {
-            IResult result = BusinessRules.Run(CheckIfCarCountOfBrandCorrect(car.BrandId), CheckIfCategoryLimitExceded());
-
-            if (result != null) //kurala uymayan bir durum oluşmuş ise 
-            {
-                return result;
-            }
-
-            _carDal.Update(car);
-
-            return new SuccessResult(Messages.CarUpdated);
-        }
-        
-        
-        private IResult CheckIfCarCountOfBrandCorrect(int brandId)
-        {
-            //Select count(*) from cars where brandId=1
-            var result = _carDal.GetAll(c => c.BrandId == brandId).Count;
-            if (result >= 10)
-            {
-                return new ErrorResult(Messages.CarCountOfBrandError);
-            }
-            return new SuccessResult();
+            return new SuccessDataResult<List<CarDetailDto>>(_carDal.GetCarDetails(c => c.CarId == carId));
         }
 
-        private IResult CheckIfCategoryLimitExceded()
-        {
-            var result = _brandService.GetAll();
-            if (result.Data.Count > 15)
-            {
-                return new ErrorResult(Messages.BrandLimitExceded);
-            }
-
-            return new SuccessResult();
-        }
+       
     }
+
 }
